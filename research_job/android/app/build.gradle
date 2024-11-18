@@ -1,0 +1,49 @@
+plugins {
+    id "com.android.application"
+    id "kotlin-android"
+    id "com.google.gms.google-services" // Google Services plugin
+    id "dev.flutter.flutter-gradle-plugin" // Flutter plugin
+}
+
+android {
+    namespace = "com.example.research_job" // Change this to your package name
+    compileSdk = 34 // Update to your desired compile SDK version
+    ndkVersion = "23.1.7779620" // Specify a valid NDK version if needed
+
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_1_8
+        targetCompatibility = JavaVersion.VERSION_1_8
+    }
+
+    kotlinOptions {
+        jvmTarget = "1.8"
+    }
+
+    defaultConfig {
+        applicationId = "com.example.research_job" // Change to your app ID
+        minSdk = 23
+        targetSdk = 34 // Make sure to specify the latest target SDK version
+        versionCode = 1
+        versionName = "1.0.0"
+        multiDexEnabled true
+    }
+
+    buildTypes {
+        release {
+            signingConfig = signingConfigs.debug
+        }
+    }
+}
+
+flutter {
+    source = "../.." // Path to your Flutter project root
+}
+
+dependencies {
+    implementation platform("com.google.firebase:firebase-bom:33.4.0") // Firebase BOM for dependencies
+    implementation 'com.google.firebase:firebase-storage' // Add Firebase Storage
+    implementation 'com.google.firebase:firebase-auth' // Add Firebase Auth
+    implementation 'androidx.multidex:multidex:2.0.1' // Multidex support
+}
+
+apply plugin: 'com.google.gms.google-services' // Apply the Google services plugin

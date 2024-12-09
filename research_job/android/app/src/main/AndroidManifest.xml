@@ -1,8 +1,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
     <application
-        android:label="research_job"
+        android:label="10arm"
         android:name="${applicationName}"
-        android:icon="@mipmap/ic_launcher">
+        android:icon="@mipmap/yt">
 
         <activity
     android:name="com.yalantis.ucrop.UCropActivity"

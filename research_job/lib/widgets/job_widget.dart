@@ -1,10 +1,15 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:research_job/Jobs/job_details.dart';
+import 'package:research_job/Services/global_methods.dart';
 
 class JobWidget extends StatefulWidget {
-  final String BuisnessTitle;
-  final String BuisnessDescription;
-  final String JobId;
-  final String uploadBy;
+  final String jobTitle;
+  final String jobDescription;
+  final String jobId;
+  final String uploadedBy;
   final String userImage;
   final String name;
   final bool recruitment;
@@ -12,10 +17,10 @@ class JobWidget extends StatefulWidget {
   final String location;
 
   const JobWidget({
-    required this.BuisnessTitle,
-    required this.BuisnessDescription,
-    required this.JobId,
-    required this.uploadBy,
+    required this.jobTitle,
+    required this.jobDescription,
+    required this.jobId,
+    required this.uploadedBy,
     required this.userImage,
     required this.name,
     required this.recruitment,
@@ -28,77 +33,122 @@ class JobWidget extends StatefulWidget {
 }
 
 class _JobWidgetState extends State<JobWidget> {
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+
+  _deleteDialog() {
+    User? user = _auth.currentUser;
+    final _uid = user!.uid;
+    showDialog(
+      context: context,
+      builder: (ctx) {
+        return AlertDialog(
+          actions: [
+            TextButton(
+              onPressed: () async {
+                try {
+                  if (widget.uploadedBy == _uid) {
+                    await FirebaseFirestore.instance
+                        .collection("jobs")
+                        .doc(widget.jobId)
+                        .delete();
+                    await Fluttertoast.showToast(
+                        msg: "Job has been deleted",
+                        toastLength: Toast.LENGTH_LONG,
+                        backgroundColor: Colors.grey,
+                        fontSize: 18);
+                    Navigator.canPop(context) ? Navigator.pop(context) : null;
+                  } else {
+                    GlobalMethod.showErrorDialog(
+                        error: "You can't perform this action", ctx: ctx);
+                  }
+                } catch (error) {
+                  GlobalMethod.showErrorDialog(
+                      error: "This task cannot be deleted", ctx: ctx);
+                } finally {}
+              },
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: const [
+                  Icon(
+                    Icons.delete,
+                    color: Colors.red,
+                  ),
+                  Text(
+                    "Delete",
+                    style: TextStyle(color: Colors.red, fontSize: 22),
+                  ),
+                ],
+              ),
+            )
+          ],
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Card(
       color: Colors.white24,
       elevation: 8,
-      margin: EdgeInsets.symmetric(horizontal: 10,vertical: 8),
+      margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
       child: ListTile(
-        onTap: (){
-
-        },
-        onLongPress: (){
-
-        },
-        contentPadding: EdgeInsets.symmetric(
-          horizontal: 20,
-          vertical: 10
-        ),
-        leading: Container(
-          padding: EdgeInsets.only(right: 12),
-          decoration: BoxDecoration(
-            border: Border(
-              right: BorderSide(
-                width: 1
- ,
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => JobDetails(
+                uploadedBy: widget.uploadedBy,
+                jobID: widget.jobId,
               ),
-
-            )
-          ),
+            ),
+          );
+        },
+        onLongPress: _deleteDialog,
+        contentPadding:
+            const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+        leading: Container(
+          padding: const EdgeInsets.only(right: 12),
+          decoration: const BoxDecoration(
+              border: Border(right: BorderSide(width: 1))),
           child: Image.network(widget.userImage),
         ),
         title: Text(
-          widget.BuisnessTitle,
+          widget.jobTitle,
           maxLines: 2,
           overflow: TextOverflow.ellipsis,
-          style: TextStyle(
-            color:  Colors.amber,
+          style: const TextStyle(
+            color: Colors.amber,
             fontWeight: FontWeight.bold,
-            fontSize: 18
+            fontSize: 18,
           ),
         ),
         subtitle: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.start,
           children: [
             Text(
               widget.name,
               maxLines: 2,
               overflow: TextOverflow.ellipsis,
-               style: TextStyle(
-            color:  Colors.black,
-            fontWeight: FontWeight.bold,
-            fontSize: 13
-          ),
+              style: const TextStyle(
+                color: Colors.black,
+                fontWeight: FontWeight.bold,
+                fontSize: 13,
+              ),
             ),
-            SizedBox(height: 8,),
-
+            const SizedBox(height: 8),
             Text(
-              widget.BuisnessDescription,
-              maxLines: 2,
+              widget.jobDescription,
+              maxLines: 4,
               overflow: TextOverflow.ellipsis,
-               style: TextStyle(
-            color:  Colors.black,
-      
-            fontSize: 15
-          ),
+              style: const TextStyle(
+                color: Colors.black,
+                fontSize: 15,
+              ),
             ),
-
-
           ],
         ),
-        trailing: Icon(
+        trailing: const Icon(
           Icons.keyboard_arrow_right,
           size: 30,
           color: Colors.black,

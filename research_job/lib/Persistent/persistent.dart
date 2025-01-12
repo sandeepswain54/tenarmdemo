@@ -13,6 +13,12 @@ class Persistent {
     "centurion university",
     "IIM Sambalpur",
     "GCE Kalahandi",
+    "IIT Bombay",
+    "LPU",
+    "ITER",
+    "Pragati College",
+    "GCE Kalahandi",
+    
   ];
 
 

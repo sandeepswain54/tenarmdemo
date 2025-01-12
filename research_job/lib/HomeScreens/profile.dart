@@ -42,9 +42,9 @@ class _ProfileState extends State<Profile> {
       }
 
       setState(() {
-        name = userDoc['name'] ?? '';
-        email = userDoc['email'] ?? '';
-        phone = userDoc['phone'] ?? '';
+        name = userDoc['name'] ?? 'Guest User';
+        email = userDoc['email'] ?? 'N/A';
+        phone = userDoc['phone'] ?? 'N/A';
         imageUrl = userDoc['profileImage'] ?? '';
         Timestamp joinedAtTimeStamp = userDoc['createdAt'];
         var joinedDate = joinedAtTimeStamp.toDate();
@@ -78,12 +78,17 @@ class _ProfileState extends State<Profile> {
           icon,
           color: Colors.white,
         ),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 10),
-          child: Text(
-            content,
-            style: const TextStyle(
-              color: Colors.white54,
+        Flexible(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 10),
+            child: Text(
+              content,
+              style: const TextStyle(
+                color: Colors.white54,
+                fontSize: 18,
+                fontWeight: FontWeight.w500,
+              ),
+              overflow: TextOverflow.ellipsis,
             ),
           ),
         ),
@@ -91,23 +96,42 @@ class _ProfileState extends State<Profile> {
     );
   }
 
-  Widget _contactBy(
-      {required Color color, required Function fct, required IconData icon}) {
-    return CircleAvatar(
-      backgroundColor: color,
-      radius: 25,
-      child: CircleAvatar(
-          radius: 23,
-          backgroundColor: Colors.white,
-          child: IconButton(
-            icon: Icon(
-              icon,
-              color: color,
-            ),
-            onPressed: () {
-              fct();
-            },
-          )),
+  Widget _contactBy({
+    required Color color,
+    required Function fct,
+    required IconData icon,
+    required String label,
+  }) {
+    return Column(
+      children: [
+        CircleAvatar(
+          backgroundColor: color,
+          radius: 30,
+          child: CircleAvatar(
+              radius: 28,
+              backgroundColor: Colors.white,
+              child: IconButton(
+                icon: Icon(
+                  icon,
+                  color: color,
+                  size: 28,
+                ),
+                onPressed: () {
+                  fct();
+                },
+              )),
+        ),
+        const SizedBox(height: 5),
+        Text(
+          label,
+          style: const TextStyle(
+            color: Colors.white70,
+            fontWeight: FontWeight.w500,
+          ),
+          
+        ),
+        
+      ],
     );
   }
 
@@ -140,8 +164,8 @@ class _ProfileState extends State<Profile> {
       decoration: BoxDecoration(
         gradient: LinearGradient(
           colors: [
-            Colors.indigo.shade400,
-            Colors.cyan.shade200,
+            Colors.deepPurple.shade700,
+            Colors.blue.shade400,
           ],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
@@ -163,10 +187,11 @@ class _ProfileState extends State<Profile> {
                         color: Colors.white10,
                         margin: const EdgeInsets.all(30),
                         shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10),
+                          borderRadius: BorderRadius.circular(20),
                         ),
+                        elevation: 5,
                         child: Padding(
-                          padding: const EdgeInsets.all(8),
+                          padding: const EdgeInsets.all(20),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
@@ -177,155 +202,131 @@ class _ProfileState extends State<Profile> {
                                   name ?? "Name here",
                                   style: const TextStyle(
                                     color: Colors.white,
-                                    fontSize: 24,
+                                    fontSize: 28,
+                                    fontWeight: FontWeight.bold,
                                   ),
                                 ),
                               ),
                               const SizedBox(height: 15),
                               const Divider(
                                 thickness: 1,
-                                color: Colors.white,
+                                color: Colors.white24,
                               ),
                               const SizedBox(height: 30),
-                              const Padding(
-                                padding: EdgeInsets.all(10),
-                                child: Text(
-                                  "Account Information:",
-                                  style: TextStyle(
-                                      color: Colors.white54, fontSize: 22),
+                              const Text(
+                                "Account Information:",
+                                style: TextStyle(
+                                  color: Colors.white54,
+                                  fontSize: 22,
                                 ),
                               ),
                               const SizedBox(height: 15),
-                              Padding(
-                                padding: const EdgeInsets.only(left: 10),
-                                child: userInfo(
-                                  icon: Icons.email,
-                                  content: email.isEmpty ? "N/A" : email,
-                                ),
+                              userInfo(
+                                icon: Icons.email,
+                                content: email.isEmpty ? "N/A" : email,
                               ),
-                              Padding(
-                                padding: const EdgeInsets.only(left: 10),
-                                child: userInfo(
-                                  icon: Icons.phone,
-                                  content: phone.isEmpty ? "N/A" : phone,
-                                ),
+                              userInfo(
+                                icon: Icons.phone,
+                                content: phone.isEmpty ? "N/A" : phone,
                               ),
-                              Padding(
-                                padding: const EdgeInsets.only(left: 10),
-                                child: userInfo(
-                                  icon: Icons.calendar_today,
-                                  content: "Joined: $joinedAt",
-                                ),
-                              ),
-                              const SizedBox(
-                                height: 15,
+                              userInfo(
+                                icon: Icons.calendar_today,
+                                content: "Joined: $joinedAt",
                               ),
                               const Divider(
                                 thickness: 1,
-                                color: Colors.white,
+                                color: Colors.white24,
                               ),
-                              const SizedBox(
-                                height: 35,
-                              ),
+                              const SizedBox(height: 35),
                               _isSameUser
                                   ? Container()
                                   : Row(
                                       mainAxisAlignment:
-                                          MainAxisAlignment.spaceAround,
+                                          MainAxisAlignment.spaceEvenly,
                                       children: [
                                         _contactBy(
-                                            color: Colors.green,
-                                            fct: () {
-                                              _openWhatsAppChat();
-                                            },
-                                            icon: FontAwesome.whatsapp),
+                                          color: Colors.green,
+                                          fct: _openWhatsAppChat,
+                                          icon: FontAwesome.whatsapp,
+                                          label: "WhatsApp",
+                                        ),
                                         _contactBy(
-                                            color: Colors.red,
-                                            fct: () {
-                                              _mainTo();
-                                            },
-                                            icon: Icons.mail_outline),
+                                          color: Colors.red,
+                                          fct: _mainTo,
+                                          icon: Icons.mail_outline,
+                                          label: "Email",
+                                        ),
                                         _contactBy(
-                                            color: Colors.purple,
-                                            fct: () {
-                                              _callPhoneNumber();
-                                            },
-                                            icon: Icons.call),
+                                          color: Colors.purple,
+                                          fct: _callPhoneNumber,
+                                          icon: Icons.call,
+                                          label: "Call",
+                                        ),
                                       ],
                                     ),
-                              !_isSameUser
-                                  ? Container()
-                                  : Center(
-                                      child: Padding(
-                                        padding:
-                                            const EdgeInsets.only(bottom: 30),
-                                        child: MaterialButton(
-                                          onPressed: () {
-                                            showDialog(
-                                              context: context,
-                                              builder: (ctx) => AlertDialog(
-                                                title: const Text(
-                                                    'Confirm Logout'),
-                                                content: const Text(
-                                                    'Are you sure you want to log out?'),
-                                                actions: [
-                                                  TextButton(
-                                                    onPressed: () {
-                                                      Navigator.of(ctx).pop();
-                                                    },
-                                                    child: const Text('No'),
+                              if (_isSameUser)
+                                Center(
+                                  child: MaterialButton(
+                                    onPressed: () {
+                                      showDialog(
+                                        context: context,
+                                        builder: (ctx) => AlertDialog(
+                                          title: const Text('Confirm Logout'),
+                                          content: const Text(
+                                              'Are you sure you want to log out?'),
+                                          actions: [
+                                            TextButton(
+                                              onPressed: () =>
+                                                  Navigator.of(ctx).pop(),
+                                              child: const Text('No'),
+                                            ),
+                                            TextButton(
+                                              onPressed: () {
+                                                Navigator.of(ctx).pop();
+                                                _auth.signOut();
+                                                Navigator.pushReplacement(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        LoginScreen(),
                                                   ),
-                                                  TextButton(
-                                                    onPressed: () {
-                                                      Navigator.of(ctx).pop();
-                                                      _auth.signOut();
-                                                      Navigator.pushReplacement(
-                                                        context,
-                                                        MaterialPageRoute(
-                                                            builder: (context) =>
-                                                                LoginScreen()),
-                                                      );
-                                                    },
-                                                    child: const Text('Yes'),
-                                                  ),
-                                                ],
-                                              ),
-                                            );
-                                          },
-                                          color: Colors.black,
-                                          elevation: 8,
-                                          shape: RoundedRectangleBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(13)),
-                                          child: Padding(
-                                            padding: const EdgeInsets.symmetric(
-                                                vertical: 14),
-                                            child: Row(
-                                              mainAxisSize: MainAxisSize.min,
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.center,
-                                              children: [
-                                                const Text(
-                                                  "Logout",
-                                                  style: TextStyle(
-                                                      color: Colors.white,
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                      fontSize: 28),
-                                                ),
-                                                const SizedBox(
-                                                  width: 8,
-                                                ),
-                                                const Icon(
-                                                  Icons.logout,
-                                                  color: Colors.white,
-                                                )
-                                              ],
+                                                );
+                                              },
+                                              child: const Text('Yes'),
+                                            ),
+                                          ],
+                                        ),
+                                      );
+                                    },
+                                    color: Colors.black,
+                                    elevation: 10,
+                                    shape: RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(20)),
+                                    child: Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          vertical: 14, horizontal: 20),
+                                      child: Row(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: const [
+                                          Text(
+                                            "Logout",
+                                            style: TextStyle(
+                                              color: Colors.white,
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 18,
                                             ),
                                           ),
-                                        ),
+                                          SizedBox(width: 10),
+                                          Icon(
+                                            Icons.logout,
+                                            color: Colors.white,
+                                          )
+                                        ],
                                       ),
-                                    )
+                                    ),
+                                  ),
+                                ),
                             ],
                           ),
                         ),
@@ -334,28 +335,26 @@ class _ProfileState extends State<Profile> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Container(
-                            width: size.width * 0.26,
-                            height: size.width * 0.26,
+                            width: size.width * 0.3,
+                            height: size.width * 0.3,
                             decoration: BoxDecoration(
-                              color: Colors.red,
                               shape: BoxShape.circle,
                               border: Border.all(
-                                width: 8,
-                                color:
-                                    Theme.of(context).scaffoldBackgroundColor,
+                                width: 4,
+                                color: Theme.of(context).scaffoldBackgroundColor,
                               ),
                               image: DecorationImage(
                                 image: NetworkImage(
                                   imageUrl.isEmpty
-                                      ? 'https://static.vecteezy.com/system/resources/previews/001/921/774/non_2x/beautiful-woman-red-hair-in-frame-circular-avatar-character-free-vector.jpg'
+                                      ? 'https://i.ibb.co/2kRcpMx/avatar.png'
                                       : imageUrl,
                                 ),
-                                fit: BoxFit.fill,
+                                fit: BoxFit.cover,
                               ),
                             ),
-                          )
+                          ),
                         ],
-                      )
+                      ),
                     ],
                   ),
                 ),

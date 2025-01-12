@@ -38,7 +38,7 @@ class _JobDetailsState extends State<JobDetails> {
   Timestamp? deadlineDateTimeStamp;
   String? deadlineDate;
   String? postedDate;
-  String? userImageUrl;
+  String? userImage;
   String? authorName;
   String? name;
   bool isDeadlineAvailable = false;
@@ -54,6 +54,7 @@ class _JobDetailsState extends State<JobDetails> {
 
       if (jobDatabase.exists) {
         setState(() {
+          userImage = jobDatabase.get("userImage");
           jobTitle = jobDatabase.get("jobTitle");
           jobDescription = jobDatabase.get("jobDescription");
           recruitment = jobDatabase.get("recruitment");
@@ -72,7 +73,7 @@ class _JobDetailsState extends State<JobDetails> {
 
         if (userDatabase.exists) {
           setState(() {
-            userImageUrl = userDatabase.get("profileImageUrl") ?? '';
+            userImage = userDatabase.get("profileImage") ?? '';
             authorName = userDatabase.get("name") ?? '';
             locationCompany = userDatabase.get("location") ?? '';
           });
@@ -193,9 +194,9 @@ class _JobDetailsState extends State<JobDetails> {
                               shape: BoxShape.circle,
                               image: DecorationImage(
                                 image: NetworkImage(
-                                  userImageUrl == null
+                                  userImage == null
                                       ? "https://h-o-m-e.org/wp-content/uploads/2022/04/Blank-Profile-Picture-0.jpg"
-                                      : userImageUrl!,
+                                      : userImage!,
                                 ),
                                 fit: BoxFit.cover,
                               ),
@@ -591,7 +592,7 @@ class _JobDetailsState extends State<JobDetails> {
                                                               _generatedId,
                                                           "name": name,
                                                           "userImageUrl":
-                                                              userImageUrl,
+                                                              userImage,
                                                           "commentBody":
                                                               _commentController
                                                                   .text,

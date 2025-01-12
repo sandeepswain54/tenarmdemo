@@ -45,7 +45,7 @@ class _UploadState extends State<Upload> {
       child: Text(
         label,
         style: TextStyle(
-            color: Colors.black, fontSize: 20, fontWeight: FontWeight.bold),
+            color: Colors.white, fontSize: 22, fontWeight: FontWeight.bold),
       ),
     );
   }
@@ -59,7 +59,7 @@ class _UploadState extends State<Upload> {
     InputDecoration? decoration, // Optional parameter for decoration
   }) {
     return Padding(
-      padding: const EdgeInsets.all(5),
+      padding: const EdgeInsets.all(10),
       child: InkWell(
         onTap: () {
           fct();
@@ -75,18 +75,18 @@ class _UploadState extends State<Upload> {
           enabled: enabled,
           key: ValueKey(valueKey),
           style: const TextStyle(color: Colors.white),
-          maxLines: valueKey == "JobDescription" ? 2 : 1,
+          maxLines: valueKey == "JobDescription" ? 3 : 1,
           maxLength: maxLength,
           keyboardType: TextInputType.text,
           decoration: decoration ??
               const InputDecoration(
                 filled: true,
-                fillColor: Colors.black54,
+                fillColor: Colors.black38,
                 enabledBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(color: Colors.black),
+                  borderSide: BorderSide(color: Colors.white),
                 ),
                 focusedBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(color: Colors.black),
+                  borderSide: BorderSide(color: Colors.white),
                 ),
               ),
         ),
@@ -99,7 +99,7 @@ class _UploadState extends State<Upload> {
         context: context,
         builder: (ctx) {
           return AlertDialog(
-            backgroundColor: Colors.black54,
+            backgroundColor: Colors.black87,
             title: const Text(
               "Student Preferences",
               textAlign: TextAlign.center,
@@ -131,7 +131,7 @@ class _UploadState extends State<Upload> {
                           child: Text(
                             Persistent.jobCategoryList[index],
                             style: const TextStyle(
-                                color: Colors.grey, fontSize: 16),
+                                color: Colors.white, fontSize: 16),
                           ),
                         )
                       ],
@@ -208,9 +208,9 @@ class _UploadState extends State<Upload> {
           "applicants": 0,
         });
         await Fluttertoast.showToast(
-          msg: "Sucessfully Uploaded",
+          msg: "Successfully Uploaded",
           toastLength: Toast.LENGTH_LONG,
-          backgroundColor: Colors.grey,
+          backgroundColor: Colors.green,
           fontSize: 18,
         );
 
@@ -221,24 +221,19 @@ class _UploadState extends State<Upload> {
           _jobDeadlineController.text = "Choose job Deadline date";
         });
       } catch (error) {
-        {
-          setState(() {
-            _isLoading = false;
-          });
-          GlobalMethod.showErrorDialog(error: error.toString(), ctx: context);
-        }
+        setState(() {
+          _isLoading = false;
+        });
+        GlobalMethod.showErrorDialog(error: error.toString(), ctx: context);
       } finally {
         setState(() {
           _isLoading = false;
         });
       }
     } else {
-      print("Its not valid");
+      print("It's not valid");
     }
   }
-
- 
-
 
   @override
   Widget build(BuildContext context) {
@@ -247,8 +242,8 @@ class _UploadState extends State<Upload> {
       decoration: BoxDecoration(
         gradient: LinearGradient(
           colors: [
-            Colors.indigo.shade400,
-            Colors.cyan.shade200,
+            Colors.indigo.shade600,
+            Colors.blue.shade300,
           ],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
@@ -259,35 +254,36 @@ class _UploadState extends State<Upload> {
         backgroundColor: Colors.transparent,
         body: Center(
           child: Padding(
-            padding: EdgeInsets.all(7),
+            padding: EdgeInsets.all(16),
             child: Card(
-              color: Colors.white10,
+              color: Colors.black.withOpacity(0.7),
+              elevation: 10,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(15),
+              ),
               child: SingleChildScrollView(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    const Align(
+                    const SizedBox(height: 15),
+                    Align(
                       alignment: Alignment.center,
                       child: Padding(
-                        padding: EdgeInsets.all(8),
+                        padding: const EdgeInsets.all(8),
                         child: Text(
                           "Please fill all Fields",
                           style: TextStyle(
-                              color: Colors.black,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 35,
-                              fontStyle: FontStyle.italic),
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 35,
+                            fontStyle: FontStyle.italic,
+                          ),
                         ),
                       ),
                     ),
-                    const SizedBox(
-                      height: 10,
-                    ),
                     const Divider(
                       thickness: 1,
+                      color: Colors.white,
                     ),
                     Padding(
                       padding: EdgeInsets.all(8),
@@ -313,14 +309,14 @@ class _UploadState extends State<Upload> {
                                 enabled: true,
                                 fct: () {},
                                 maxLength: 50),
-                            _textTitles(label: "Project Description :"),
+                            _textTitles(label: "Project Description:"),
                             _textFormFields(
                                 valueKey: "JobDescription",
                                 controller: _jobDescriptionController,
                                 enabled: true,
                                 fct: () {},
                                 maxLength: 100),
-                            _textTitles(label: "Project Deadline Date :"),
+                            _textTitles(label: "Project Deadline Date:"),
                             _textFormFields(
                               valueKey: "JobDeadline",
                               controller: _jobDeadlineController,
@@ -335,10 +331,10 @@ class _UploadState extends State<Upload> {
                                 filled: true,
                                 fillColor: Colors.black54,
                                 enabledBorder: UnderlineInputBorder(
-                                  borderSide: BorderSide(color: Colors.black),
+                                  borderSide: BorderSide(color: Colors.white),
                                 ),
                                 focusedBorder: UnderlineInputBorder(
-                                  borderSide: BorderSide(color: Colors.black),
+                                  borderSide: BorderSide(color: Colors.white),
                                 ),
                               ),
                             ),
@@ -355,7 +351,7 @@ class _UploadState extends State<Upload> {
                                 onPressed: () {
                                   _uploadTask();
                                 },
-                                color: Colors.black,
+                                color: Colors.blueAccent,
                                 elevation: 8,
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(13),
@@ -385,7 +381,7 @@ class _UploadState extends State<Upload> {
                                 ),
                               ),
                       ),
-                    )
+                    ),
                   ],
                 ),
               ),
